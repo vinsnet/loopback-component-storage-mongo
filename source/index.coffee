@@ -112,7 +112,7 @@ class MongoStorage
       'metadata.mongo-storage': true
       'metadata.container': container
     .toArray callback
-  
+
   removeFile: (container, filename, callback) ->
     self = @
     self.getFile container, filename, (err, file) ->
@@ -169,6 +169,14 @@ class MongoStorage
     @getFileById id, (err, file) ->
       return callback err if err
       self.__download file, res, callback
+
+  downloadStream: (container, filename, callback = (-> return)) ->
+    gfs = Grid @db, mongodb
+    read = gfs.createReadStream
+      container: container
+      filename: filename
+    read.on 'end', callback
+    read
 
   download: (container, filename, res, callback = (-> return)) ->
     self = @
