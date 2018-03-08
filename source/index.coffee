@@ -170,6 +170,12 @@ class MongoStorage
       return callback err if err
       self.__download file, res, callback
 
+  downloadStream: (container, filename, callback = (-> return)) ->
+    gfs = Grid @db, mongodb
+    read = gfs.createReadStream
+      container: container
+      filename: filename
+
   download: (container, filename, res, callback = (-> return)) ->
     self = @
     @getFile container, filename, (err, file) ->
